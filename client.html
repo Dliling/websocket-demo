@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>websocket</title>
+</head>
+<body>
+    <input type="text" placeholder="please input message" id="message" />
+    <button type="button" id="send" onclick="sendMessage()">send</button>
+    <div id="box">data: </div>
+</body>
+<script>
+    if ('WebSocket' in window) {
+        var ws = new WebSocket('ws://localhost:8181');
+        ws.open = function () {
+            console.log('connect to server opened');
+        };
+        var el = document.querySelector('#message');
+        function sendMessage() {
+            ws.send(el.value);
+        }
+        ws.onmessage = function (e) {
+            console.log('e.data', e.data);
+            document.querySelector('#box').innerHTML = e.data;
+        };
+        ws.onclose = function () {
+            console.log('connection is closed');
+        };
+        ws.onerror = function (e) {
+            console.log('connection is error', e);
+        };
+    }
+    else {
+        alert('your browser does not support websocket');
+    }
+</script>
+</html>
